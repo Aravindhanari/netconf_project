@@ -36,30 +36,73 @@ class editNetconfView(APIView):
 
     def post(self, request):
         post_data = request.data
-        print('dataaaa got from the api')
-        post_data = json.dumps(post_data)
-        m = manager.connect(**router_config, look_for_keys=False)
-        print('m check ')
-        print(m)
-        netconf_template = open('quickstart/templates/interface.xml').read()
+        post_data = dict(post_data)
+        try:
+            m = manager.connect(**router_config, look_for_keys=False)
+            netconf_template = open('quickstart/templates/interface.xml').read()
+            netconf_payload = netconf_template.format(description=post_data['description'])
+            response = m.edit_config(netconf_payload, target="candidate").xml
 
-        # netconf_payload = netconf_template.format(description=post_data['description'], name=post_data['name'], ip=post_data['ip'],netmask=post_data['netmask'])
+            running_config_xml = xmltodict.parse(response)["rpc-reply"]
 
-        netconf_payload = netconf_template.format(post_data)
-        response = m.edit_config(netconf_payload, target="candidate").xml
-        print('response from edit config')
-        print(response)
-        running_config_xml = xmltodict.parse(response)["rpc-reply"]
-        print(running_config_xml)
-        if 'ok' in running_config_xml:
-            return Response(True, 200)
-        else:
-            return Response(False, 201)
+            if 'ok' in running_config_xml:
+                data = {
+                    'message': 'Config edit was successfull',
+                    'data': response,
+                    'status_code': 200
+                }
+                return Response(data)
+            else:
+                data = {
+                    'error': 'Config edit was Failed',
+                    'data': response,
+                    'status_code': 201
+                }
+                return Response(data)
+        except Exception as error:
+            data = {
+                'error': error,
+                'message': 'Config edit was Failed',
+                'data': response,
+                'status_code': 500
+            }
+            return Response(data, 500)
 
-        # return running_config_xml
-        # data_obj = myNetconf(capab)
-        # serializer_class = myNetconfSerializer(data_obj)
-        # return Response(running_config_xml.data)
+class filterInterfaceView(APIView):
+
+    def get(self, request):
+        interface_name = request.query_params.get('interface_name')
+        try:
+            m = manager.connect(**router_config, look_for_keys=False)
+            netconf_filter = """
+            <filter>
+                <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
+                   <interface-configuration>
+                          <interface-name>""" + interface_name + """
+                          </interface-name>
+                   </interface-configuration>
+                </interface-configurations>
+            </filter>
+            """
+
+            running_config = m.get_config("running", netconf_filter)
+            running_config_xml = xmltodict.parse(running_config.xml)["rpc-reply"]["data"]
+
+
+            data = {
+                'message': 'Success',
+                'data': running_config_xml['interface-configurations']["interface-configuration"],
+                'status_code': 200
+            }
+            return Response(data)
+        except Exception as error:
+            data = {
+                'error': error,
+                'message': 'Config edit was Failed',
+                # 'data': response,
+                'status_code': 500
+            }
+            return Response(data, 500)
 
 
 

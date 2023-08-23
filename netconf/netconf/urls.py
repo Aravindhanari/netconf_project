@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from quickstart.views import NetconfView, GetconfigView, editNetconfView
+from quickstart.views import NetconfView, GetconfigView, editNetconfView, filterInterfaceView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/connect-get-capability/', NetconfView.as_view()),
     path('api/get-running-config/', GetconfigView.as_view()),
     path('api/edit-config/', editNetconfView.as_view()),
+    path('api/filter-config-byname/', filterInterfaceView.as_view()),
 ]
