@@ -4,11 +4,7 @@ from .tests import *
 from rest_framework.response import Response
 from netconf.parameters import router_config
 from ncclient import manager
-import xml.dom.minidom
-import json
 import xmltodict
-import xml.etree.ElementTree as E
-from django.template.loader import render_to_string, get_template
 
 class NetconfView(APIView):
 
@@ -18,7 +14,6 @@ class NetconfView(APIView):
         print(m.connected)
         capab = []
         for capability in m.server_capabilities:
-            print('*' * 50)
             capab.append(capability)
         data_obj = myNetconf(capab)
         serializer_class = myNetconfSerializer(data_obj)
@@ -63,7 +58,6 @@ class editNetconfView(APIView):
             data = {
                 'error': error,
                 'message': 'Config edit was Failed',
-                'data': response,
                 'status_code': 500
             }
             return Response(data, 500)
@@ -99,7 +93,6 @@ class filterInterfaceView(APIView):
             data = {
                 'error': error,
                 'message': 'Config edit was Failed',
-                # 'data': response,
                 'status_code': 500
             }
             return Response(data, 500)
