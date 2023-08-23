@@ -14,4 +14,5 @@
 * xmltodict 0.13.0
 
 ## Installation
-Please create an virtual env and activate before installing above packages. use pip for installing the dependent packages.
+Please create an virtual env and activate before installing above packages. use pip for installing the dependent packages. Below command will install the requirements easily.
+  pip install -r requirements.txt 
