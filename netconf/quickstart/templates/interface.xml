@@ -2,14 +2,14 @@
 <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"  xc:operation="merge">
    <interface-configuration>
       <active>act</active>
-    <interface-name>Loopback100001</interface-name>
+    <interface-name>%s</interface-name>
     <interface-virtual/>
-      <description>Configured by ARI check</description>
+      <description>%s</description>
        <ipv4-network xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ipv4-io-cfg">
         <addresses>
          <primary>
-          <address>1.1.1.96</address>
-          <netmask>255.255.255.255</netmask>
+          <address>%s</address>
+          <netmask>%s</netmask>
          </primary>
         </addresses>
        </ipv4-network>
