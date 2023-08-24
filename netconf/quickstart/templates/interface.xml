@@ -1,5 +1,5 @@
 <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
-<interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"  xc:operation="merge">
+<interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"  xc:operation='%s'>
    <interface-configuration>
       <active>act</active>
     <interface-name>%s</interface-name>

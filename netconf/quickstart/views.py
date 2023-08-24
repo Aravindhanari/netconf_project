@@ -52,7 +52,8 @@ class editNetconfView(APIView):
             m = manager.connect(**router_config, look_for_keys=False)
             netconf_template = open('quickstart/templates/interface.xml').read()
 
-            netconf_payload = netconf_template % (post_data['name'], post_data['description'], post_data['ip'], post_data['netmask'])
+            netconf_payload = netconf_template % (post_data['operation'],post_data['name'], post_data['description'], post_data['ip'], post_data['netmask'])
+
             response = m.edit_config(netconf_payload, target="candidate").xml
 
             running_config_xml = xmltodict.parse(response)["rpc-reply"]
